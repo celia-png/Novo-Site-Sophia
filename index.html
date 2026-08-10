@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SophIA — Primeira Recrutadora Virtual Conversacional do Brasil</title>
+<meta name="description" content="A SophIA realiza entrevistas conversacionais por voz, em tempo real, 24 horas por dia, 7 dias por semana. Pare de triar currículos e comece a triar pessoas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+:root{
+  --bg-deep:#0A0A0F;
+  --bg-navy:#0D0D1A;
+  --bg-purple-deep:#1A0F2E;
+  --purple:#7C3AED;
+  --purple-soft: rgba(124,58,237,.35);
+  --violet-deep:#4C1D95;
+  --lilac:#C4B5FD;
+  --white:#F5F5F7;
+  --gray:#A1A1AA;
+  --border:#2A2A35;
+
+  --font-display:'Space Grotesk', sans-serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'Space Mono', monospace;
+
+  --ease: cubic-bezier(.16,.84,.44,1);
+  --section-pad: clamp(80px, 12vw, 160px);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg-deep);
+  color:var(--white);
+  font-family:var(--font-body);
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* subtle film-grain noise overlay for premium texture */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+}
+
+::selection{background:var(--purple); color:var(--white);}
+
+a{color:inherit; text-decoration:none;}
+img{max-width:100%; display:block;}
+
+.wrap{
+  max-width:1240px;
+  margin:0 auto;
+  padding:0 clamp(24px,5vw,64px);
+}
+
+h1,h2,h3{
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:-0.02em;
+  line-height:1.08;
+}
+
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--lilac);
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+
+.section{
+  position:relative;
+  padding:var(--section-pad) 0;
+}
+
+.section-inner{max-width:1240px; margin:0 auto; padding:0 clamp(24px,5vw,64px);}
+
+/* focus visibility */
+a:focus-visible, button:focus-visible{
+  outline:2px solid var(--lilac);
+  outline-offset:4px;
+  border-radius:4px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+}
+
+/* ============================================
+   REVEAL ON SCROLL
+   ============================================ */
+.reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity 1s var(--ease), transform 1s var(--ease);
+}
+.reveal.is-visible{opacity:1; transform:translateY(0);}
+.reveal-delay-1.is-visible{transition-delay:.12s;}
+.reveal-delay-2.is-visible{transition-delay:.24s;}
+.reveal-delay-3.is-visible{transition-delay:.36s;}
+
+/* ============================================
+   NAV
+   ============================================ */
+.nav{
+  position:fixed; top:0; left:0; right:0;
+  z-index:100;
+  padding:22px 0;
+  backdrop-filter:blur(14px);
+  background:linear-gradient(to bottom, rgba(10,10,15,.7), transparent);
+  transition:background .4s ease, padding .4s ease;
+}
+.nav.scrolled{
+  background:rgba(10,10,15,.82);
+  border-bottom:1px solid var(--border);
+  padding:14px 0;
+}
+.nav-inner{
+  max-width:1240px; margin:0 auto; padding:0 clamp(24px,5vw,64px);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.logo{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.15rem;
+  letter-spacing:-.01em;
+}
+.logo span{color:var(--lilac);}
+.nav-cta{
+  font-family:var(--font-mono);
+  font-size:.78rem;
+  letter-spacing:.05em;
+  padding:10px 20px;
+  border:1px solid var(--purple);
+  border-radius:100px;
+  transition:background .3s ease, box-shadow .3s ease, transform .3s ease;
+}
+.nav-cta:hover{background:var(--purple); box-shadow:0 0 24px var(--purple-soft); transform:translateY(-1px);}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-family:var(--font-body);
+  font-weight:500;
+  font-size:1rem;
+  padding:16px 30px;
+  border-radius:100px;
+  transition:box-shadow .35s ease, transform .35s ease, background .35s ease;
+  cursor:pointer;
+  border:none;
+}
+.btn-primary{
+  background:var(--purple);
+  color:var(--white);
+}
+.btn-primary:hover{box-shadow:0 0 40px var(--purple-soft); transform:translateY(-2px);}
+.btn-ghost{
+  background:transparent;
+  color:var(--white);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{border-color:var(--lilac); color:var(--lilac);}
+.btn-arrow{transition:transform .3s ease;}
+.btn:hover .btn-arrow{transform:translateX(4px);}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 75% 30%, rgba(124,58,237,.22), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 80%, rgba(76,29,149,.18), transparent 60%),
+    var(--bg-deep);
+}
+#particle-canvas{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  z-index:0;
+}
+.hero-inner{
+  position:relative; z-index:2;
+  max-width:1240px; margin:0 auto;
+  padding:140px clamp(24px,5vw,64px) 80px;
+  width:100%;
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:48px;
+  align-items:center;
+}
+.live-badge{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gray);
+  padding:8px 16px;
+  border:1px solid var(--border);
+  border-radius:100px;
+  margin-bottom:28px;
+}
+.live-dot{
+  width:7px; height:7px; border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 0 0 rgba(34,197,94,.6);
+  animation:pulse-dot 2s infinite;
+}
+@keyframes pulse-dot{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,.55);}
+  70%{box-shadow:0 0 0 8px rgba(34,197,94,0);}
+  100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}
+}
+.hero h1{
+  font-size:clamp(2.4rem, 5vw, 4.1rem);
+  margin-bottom:22px;
+}
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(95deg, var(--lilac), var(--purple));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.hero p.lead{
+  font-size:clamp(1rem,1.6vw,1.2rem);
+  color:var(--gray);
+  max-width:520px;
+  margin-bottom:40px;
+  font-weight:300;
+}
+.hero-actions{display:flex; align-items:center; gap:20px; flex-wrap:wrap;}
+.nps-badge{
+  margin-top:56px;
+  display:inline-flex; align-items:center; gap:14px;
+  padding:14px 20px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:rgba(255,255,255,.02);
+}
+.nps-number{
+  font-family:var(--font-display); font-weight:700;
+  font-size:1.6rem; color:var(--lilac);
+}
+.nps-label{font-size:.78rem; color:var(--gray); line-height:1.3;}
+
+/* Avatar */
+.avatar-frame{
+  position:relative;
+  aspect-ratio:3/4;
+  border-radius:24px;
+  background:linear-gradient(160deg, var(--bg-purple-deep), var(--bg-navy));
+  border:1px solid var(--border);
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 40px 100px -30px rgba(124,58,237,.35);
+}
+.avatar-frame::after{
+  content:"";
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 20%, rgba(124,58,237,.35), transparent 65%);
+  pointer-events:none;
+}
+.avatar-placeholder{
+  position:relative; z-index:1;
+  text-align:center;
+  padding:32px;
+  color:var(--gray);
+}
+.avatar-glyph{
+  width:64px; height:64px;
+  margin:0 auto 18px;
+  border:1.5px dashed var(--lilac);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  opacity:.7;
+}
+.avatar-placeholder strong{display:block; color:var(--white); font-family:var(--font-mono); font-size:.8rem; letter-spacing:.05em; margin-bottom:6px;}
+.avatar-placeholder span{font-size:.78rem; line-height:1.5; display:block;}
+
+@media (max-width: 900px){
+  .hero-inner{grid-template-columns:1fr; padding-top:120px;}
+  .avatar-frame{max-width:280px; margin:0 auto; aspect-ratio:1/1;}
+}
+
+/* ============================================
+   2. OUÇA A SOPHIA — waveform
+   ============================================ */
+.listen{
+  text-align:center;
+  background:var(--bg-navy);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.listen h2{
+  font-size:clamp(1.8rem, 4vw, 3rem);
+  max-width:680px;
+  margin:0 auto 20px;
+}
+.listen h2 .dim{color:var(--gray); font-weight:400;}
+.listen p.sub{color:var(--gray); max-width:460px; margin:0 auto 56px;}
+.waveform{
+  display:flex; align-items:center; justify-content:center;
+  gap:4px;
+  height:120px;
+  max-width:640px;
+  margin:0 auto;
+}
+.waveform span{
+  display:block;
+  width:5px;
+  border-radius:4px;
+  background:linear-gradient(180deg, var(--lilac), var(--purple));
+  animation:wave 1.6s ease-in-out infinite;
+  opacity:.85;
+}
+@keyframes wave{
+  0%,100%{transform:scaleY(.3);}
+  50%{transform:scaleY(1);}
+}
+
+/* ============================================
+   3. O PROBLEMA
+   ============================================ */
+.problem{background:var(--bg-deep);}
+.problem-grid{
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:64px;
+  align-items:start;
+}
+.problem h2{font-size:clamp(1.8rem,3.4vw,2.6rem); margin:16px 0 24px;}
+.problem-lede{color:var(--gray); font-size:1.05rem; max-width:440px;}
+.stat-quotes{display:flex; flex-direction:column; gap:1px; background:var(--border);}
+.stat-quote{
+  background:var(--bg-deep);
+  padding:28px 8px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:24px;
+  align-items:baseline;
+}
+.stat-quote .src{
+  font-family:var(--font-mono);
+  font-size:.7rem;
+  color:var(--lilac);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  padding-top:4px;
+}
+.stat-quote p{font-size:1.02rem; color:var(--white); font-weight:300;}
+.stat-quote .placeholder-flag{
+  display:block; margin-top:6px;
+  font-family:var(--font-mono); font-size:.68rem; color:var(--gray); opacity:.6;
+}
+@media (max-width: 860px){
+  .problem-grid{grid-template-columns:1fr; gap:40px;}
+  .stat-quote{grid-template-columns:1fr; gap:8px;}
+}
+
+/* ============================================
+   4. O IMPASSE — resume dissolve
+   ============================================ */
+.impasse{
+  background:var(--bg-navy);
+  text-align:center;
+  overflow:hidden;
+}
+.impasse-visual{
+  position:relative;
+  height:220px;
+  max-width:520px;
+  margin:0 auto 48px;
+}
+.doc-lines{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; gap:12px;
+  padding:24px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:rgba(255,255,255,.015);
+}
+.doc-line{
+  height:8px; border-radius:4px;
+  background:var(--border);
+}
+.doc-line.particled{
+  background:transparent;
+  position:relative;
+  overflow:visible;
+}
+.impasse h2{
+  font-size:clamp(2rem, 4.6vw, 3.4rem);
+  max-width:760px;
+  margin:0 auto;
+}
+.impasse-tags{
+  display:flex; flex-wrap:wrap; gap:12px;
+  justify-content:center;
+  margin-top:44px;
+}
+.impasse-tags span{
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  letter-spacing:.04em;
+  color:var(--gray);
+  padding:8px 14px;
+  border:1px solid var(--border);
+  border-radius:100px;
+}
+/* ============================================
+   5. O QUE A SOPHIA FAZ
+   ============================================ */
+.features{background:var(--bg-deep);}
+.features-head{max-width:600px; margin-bottom:64px;}
+.features-head h2{font-size:clamp(1.8rem,3.4vw,2.6rem); margin-top:16px;}
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+}
+.feature-card{
+  background:var(--bg-deep);
+  padding:36px 30px;
+  transition:background .35s ease;
+}
+.feature-card:hover{background:rgba(124,58,237,.06);}
+.feature-icon{
+  width:38px; height:38px;
+  border:1px solid var(--lilac);
+  border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--lilac);
+  font-family:var(--font-mono);
+  margin-bottom:22px;
+  font-size:.9rem;
+}
+.feature-card h3{font-family:var(--font-display); font-size:1.05rem; font-weight:600; margin-bottom:10px;}
+.feature-card p{color:var(--gray); font-size:.92rem;}
+@media (max-width:900px){.features-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:600px){.features-grid{grid-template-columns:1fr;}}
+
+/* ============================================
+   6. SOPHIA VS OUTRAS IAS
+   ============================================ */
+.versus{background:var(--bg-navy); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+.versus-head{text-align:center; max-width:640px; margin:0 auto 64px;}
+.versus-head h2{font-size:clamp(1.8rem,3.6vw,2.8rem);}
+.versus-head h2 .weak{color:var(--gray); font-weight:400; display:block; font-size:.7em; margin-bottom:6px;}
+.versus-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:24px;
+}
+.versus-card{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:40px 32px;
+  min-height:280px;
+  display:flex; flex-direction:column;
+}
+.versus-card.other{
+  background:rgba(255,255,255,.015);
+  opacity:.75;
+}
+.versus-card.sophia{
+  background:linear-gradient(160deg, rgba(124,58,237,.12), transparent);
+  border-color:var(--purple);
+  box-shadow:0 0 50px -20px var(--purple-soft);
+}
+.versus-label{font-family:var(--font-mono); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gray); margin-bottom:20px;}
+.versus-card.sophia .versus-label{color:var(--lilac);}
+.chat-bubble{
+  padding:12px 16px; border-radius:10px; font-size:.88rem; max-width:85%;
+  margin-bottom:10px;
+}
+.other .chat-bubble{background:rgba(255,255,255,.05); color:var(--gray);}
+.sophia .chat-bubble{background:rgba(124,58,237,.2); color:var(--white);}
+.versus-mini-wave{display:flex; gap:3px; align-items:center; margin-top:auto; padding-top:20px;}
+.versus-mini-wave span{width:3px; border-radius:2px; background:var(--lilac); animation:wave 1.3s ease-in-out infinite;}
+@media (max-width:760px){.versus-grid{grid-template-columns:1fr;}}
+
+/* ============================================
+   7. RECRUTADORA EM AÇÃO
+   ============================================ */
+.action{background:var(--bg-deep);}
+.action-head{text-align:center; max-width:640px; margin:0 auto 64px;}
+.action-head h2{font-size:clamp(1.8rem,3.6vw,2.8rem);}
+.dashboard{
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  background:linear-gradient(160deg, var(--bg-purple-deep) 0%, var(--bg-navy) 100%);
+  box-shadow:0 60px 120px -50px rgba(124,58,237,.4);
+}
+.dashboard-bar{
+  display:flex; align-items:center; gap:8px;
+  padding:16px 22px;
+  border-bottom:1px solid var(--border);
+  font-family:var(--font-mono); font-size:.7rem; color:var(--gray);
+}
+.dashboard-bar .dot{width:8px;height:8px;border-radius:50%; background:var(--border);}
+.dashboard-body{
+  display:grid; grid-template-columns:1.4fr 1fr; gap:1px; background:var(--border);
+}
+.dashboard-col{background:var(--bg-navy); padding:28px;}
+.rank-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0; border-bottom:1px solid var(--border);
+  font-size:.92rem;
+}
+.rank-row:last-child{border-bottom:none;}
+.rank-name{display:flex; align-items:center; gap:12px;}
+.rank-num{font-family:var(--font-mono); color:var(--gray); font-size:.8rem; width:20px;}
+.score-pill{
+  font-family:var(--font-mono); font-size:.78rem;
+  padding:4px 10px; border-radius:100px;
+  background:rgba(124,58,237,.18); color:var(--lilac);
+}
+.dashboard-col h4{font-family:var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--gray); margin-bottom:18px;}
+.metric-bar-row{margin-bottom:16px;}
+.metric-bar-row .lbl{display:flex; justify-content:space-between; font-size:.82rem; margin-bottom:6px; color:var(--gray);}
+.metric-bar-track{height:6px; border-radius:4px; background:var(--border); overflow:hidden;}
+.metric-bar-fill{height:100%; border-radius:4px; background:linear-gradient(90deg, var(--violet-deep), var(--lilac)); width:0%; transition:width 1.4s var(--ease);}
+.dashboard-foot{
+  display:flex; flex-wrap:wrap; gap:32px;
+  padding:24px 28px; border-top:1px solid var(--border);
+  font-family:var(--font-mono); font-size:.72rem; color:var(--gray);
+}
+@media (max-width:800px){.dashboard-body{grid-template-columns:1fr;}}
+
+/* ============================================
+   8. COMO FUNCIONA — 5 PASSOS
+   ============================================ */
+.steps{background:var(--bg-navy); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+.steps-head{max-width:600px; margin-bottom:64px;}
+.steps-head h2{font-size:clamp(1.8rem,3.4vw,2.6rem); margin-top:16px;}
+.steps-track{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:20px;
+}
+.step-card{
+  position:relative;
+  padding:28px 20px 24px;
+  border-top:2px solid var(--border);
+  transition:border-color .4s ease;
+}
+.step-card.is-visible{border-top-color:var(--purple);}
+.step-num{font-family:var(--font-mono); font-size:.75rem; color:var(--lilac); margin-bottom:16px; display:block;}
+.step-card h3{font-family:var(--font-display); font-size:1rem; font-weight:600; margin-bottom:8px;}
+.step-card p{font-size:.85rem; color:var(--gray);}
+@media (max-width:900px){.steps-track{grid-template-columns:1fr 1fr;}}
+@media (max-width:560px){.steps-track{grid-template-columns:1fr;}}
+/* ============================================
+   9. CORE10®
+   ============================================ */
+.core10{background:var(--bg-deep);}
+.core10-wrap{
+  border:1px solid var(--violet-deep);
+  border-radius:24px;
+  padding:clamp(32px,5vw,64px);
+  background:linear-gradient(135deg, rgba(76,29,149,.15), transparent 60%);
+  display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;
+}
+.core10-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em;
+  color:var(--lilac); border:1px solid var(--purple); border-radius:100px;
+  padding:6px 14px; margin-bottom:20px;
+}
+.core10-wrap h2{font-size:clamp(1.8rem,3.2vw,2.4rem); margin-bottom:16px;}
+.core10-wrap p{color:var(--gray); margin-bottom:0;}
+.core10-layers{display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:14px; overflow:hidden;}
+.core10-layer{background:var(--bg-navy); padding:16px 20px; display:flex; justify-content:space-between; align-items:center; font-size:.88rem;}
+.core10-layer span:last-child{font-family:var(--font-mono); font-size:.72rem; color:var(--lilac);}
+@media (max-width:860px){.core10-wrap{grid-template-columns:1fr;}}
+
+/* ============================================
+   10. PARCERIA META / WHATSAPP
+   ============================================ */
+.whatsapp{background:var(--bg-navy); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+.wa-grid{display:grid; grid-template-columns:1fr .8fr; gap:56px; align-items:center;}
+.wa-grid h2{font-size:clamp(1.8rem,3.2vw,2.5rem); margin:16px 0 20px;}
+.wa-grid p{color:var(--gray); max-width:440px; margin-bottom:24px;}
+.wa-list{list-style:none; display:flex; flex-direction:column; gap:10px;}
+.wa-list li{font-size:.92rem; color:var(--white); display:flex; gap:10px; align-items:baseline;}
+.wa-list li::before{content:"—"; color:var(--lilac);}
+.wa-phone{
+  background:linear-gradient(160deg, var(--bg-purple-deep), var(--bg-navy));
+  border:1px solid var(--border); border-radius:22px;
+  padding:20px; max-width:340px; margin:0 auto;
+}
+.wa-phone-head{display:flex; align-items:center; gap:10px; padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:14px;}
+.wa-avatar-dot{width:32px; height:32px; border-radius:50%; background:var(--purple); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:.8rem;}
+.wa-phone-head strong{font-size:.85rem;}
+.wa-phone-head span{display:block; font-size:.7rem; color:#22c55e;}
+.wa-msg{background:rgba(255,255,255,.05); border-radius:12px 12px 12px 2px; padding:10px 14px; font-size:.84rem; margin-bottom:10px; max-width:88%;}
+.wa-msg.out{background:rgba(124,58,237,.25); margin-left:auto; border-radius:12px 12px 2px 12px;}
+@media (max-width:860px){.wa-grid{grid-template-columns:1fr;}}
+
+/* ============================================
+   11. DEMONSTRAÇÃO DA EXPERIÊNCIA
+   ============================================ */
+.demo{background:var(--bg-deep); text-align:center;}
+.demo-head{max-width:600px; margin:0 auto 56px;}
+.demo-head h2{font-size:clamp(1.8rem,3.2vw,2.5rem);}
+.demo-frame{
+  max-width:460px; margin:0 auto;
+  border:1px solid var(--border); border-radius:20px;
+  padding:24px; text-align:left;
+  background:rgba(255,255,255,.02);
+}
+.demo-frame .wa-msg{max-width:100%;}
+
+/* ============================================
+   12. EFICIÊNCIA EM NÚMEROS
+   ============================================ */
+.numbers{background:var(--bg-navy); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+.numbers-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  background:var(--border); border:1px solid var(--border);
+}
+.number-card{background:var(--bg-navy); padding:40px 24px; text-align:center;}
+.number-card .num{
+  font-family:var(--font-display); font-weight:700;
+  font-size:clamp(2.4rem,4.5vw,3.4rem);
+  color:var(--lilac);
+  display:block; margin-bottom:10px;
+  font-variant-numeric:tabular-nums;
+}
+.number-card .lbl{font-size:.85rem; color:var(--gray);}
+@media (max-width:800px){.numbers-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:480px){.numbers-grid{grid-template-columns:1fr;}}
+/* ============================================
+   13. EMPRESAS QUE JÁ UTILIZAM
+   ============================================ */
+.clients{background:var(--bg-deep); text-align:center;}
+.clients-head{margin-bottom:48px;}
+.clients-grid{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:1px;
+  background:var(--border); border:1px solid var(--border);
+}
+.client-logo{
+  background:var(--bg-deep); padding:32px 20px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:600; font-size:.95rem;
+  color:var(--gray); letter-spacing:.02em;
+  opacity:.7; transition:opacity .3s ease, color .3s ease;
+}
+.client-logo:hover{opacity:1; color:var(--white);}
+@media (max-width:800px){.clients-grid{grid-template-columns:repeat(3,1fr);}}
+@media (max-width:520px){.clients-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* ============================================
+   14. DEPOIMENTOS
+   ============================================ */
+.testimonials{background:var(--bg-navy); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+.testimonial-card{
+  max-width:760px; margin:0 auto; text-align:center;
+}
+.testimonial-card blockquote{
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.3rem,2.6vw,1.9rem);
+  line-height:1.35;
+  margin-bottom:28px;
+}
+.testimonial-card cite{font-style:normal; font-family:var(--font-mono); font-size:.78rem; color:var(--gray);}
+.testimonial-note{margin-top:40px; font-family:var(--font-mono); font-size:.68rem; color:var(--gray); opacity:.6;}
+
+/* ============================================
+   15. SOPHIA NA MÍDIA
+   ============================================ */
+.press{background:var(--bg-deep);}
+.press-head{max-width:600px; margin-bottom:56px;}
+.press-head h2{font-size:clamp(1.8rem,3.2vw,2.5rem); margin-top:16px;}
+.press-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border);}
+.press-card{background:var(--bg-deep); padding:32px 26px; min-height:160px; display:flex; flex-direction:column; justify-content:space-between;}
+.press-card .veh{font-family:var(--font-mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--lilac);}
+.press-card .ph{color:var(--gray); font-size:.85rem; margin-top:14px;}
+@media (max-width:860px){.press-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:560px){.press-grid{grid-template-columns:1fr;}}
+
+/* ============================================
+   16. POR TRÁS DA SOPHIA
+   ============================================ */
+.team{background:var(--bg-navy); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+.team-head{max-width:640px; margin-bottom:56px;}
+.team-head h2{font-size:clamp(1.8rem,3.2vw,2.5rem); margin-top:16px;}
+.team-head p{color:var(--gray); margin-top:16px; max-width:520px;}
+.team-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:28px;}
+.team-card{text-align:left;}
+.team-photo{
+  aspect-ratio:1/1; border-radius:14px;
+  background:linear-gradient(160deg, var(--bg-purple-deep), var(--bg-deep));
+  border:1px solid var(--border);
+  margin-bottom:16px;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gray); font-family:var(--font-mono); font-size:.68rem; text-align:center; padding:12px;
+}
+.team-card h3{font-family:var(--font-display); font-size:.98rem; font-weight:600; margin-bottom:4px;}
+.team-card span{font-size:.8rem; color:var(--gray);}
+@media (max-width:860px){.team-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:520px){.team-grid{grid-template-columns:1fr;}}
+
+/* ============================================
+   17. CTA FINAL
+   ============================================ */
+.cta-final{
+  position:relative; text-align:center; overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 30%, rgba(124,58,237,.28), transparent 65%),
+    var(--bg-deep);
+  padding-top:calc(var(--section-pad) * 1.3);
+  padding-bottom:calc(var(--section-pad) * 1.3);
+}
+.cta-final h2{
+  font-size:clamp(2rem,4.6vw,3.4rem);
+  max-width:760px; margin:0 auto 20px;
+}
+.cta-final h2 .dim{color:var(--gray); font-weight:400; display:block; font-size:.62em; margin-bottom:10px;}
+.cta-final p.sub{color:var(--gray); max-width:500px; margin:0 auto 40px;}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer{
+  background:var(--bg-deep); border-top:1px solid var(--border);
+  padding:40px 0;
+}
+.footer-inner{
+  max-width:1240px; margin:0 auto; padding:0 clamp(24px,5vw,64px);
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+}
+.footer-inner .logo{font-size:1rem;}
+.footer-inner p{font-size:.78rem; color:var(--gray);}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="logo">Soph<span>IA</span></div>
+    <a href="#cta-final" class="nav-cta">Agendar demonstração</a>
+  </div>
+</nav>
+
+<!-- ======================================================
+     1. HERO
+====================================================== -->
+<header class="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-inner">
+    <div>
+      <div class="live-badge"><span class="live-dot"></span> Entrevistas acontecendo agora</div>
+      <h1 class="reveal">Primeira <em>Recrutadora Virtual Conversacional</em> do Brasil.</h1>
+      <p class="lead reveal reveal-delay-1">A SophIA realiza entrevistas conversacionais 24 horas por dia, 7 dias por semana. Sem agendamentos.</p>
+      <div class="hero-actions reveal reveal-delay-2">
+        <a href="#conhecer" class="btn btn-primary">Quero conhecer a SophIA <span class="btn-arrow">→</span></a>
+      </div>
+      <div class="nps-badge reveal reveal-delay-3">
+        <span class="nps-number">9,2</span>
+        <span class="nps-label">NPS dos candidatos<br>Zona de Excelência</span>
+      </div>
+    </div>
+    <div class="avatar-frame reveal reveal-delay-2">
+      <div class="avatar-placeholder">
+        <div class="avatar-glyph">◐</div>
+        <strong>AVATAR SOPHIA</strong>
+        <span>Espaço reservado ao asset oficial<br>fornecido pelo cliente</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ======================================================
+     2. OUÇA A SOPHIA
+====================================================== -->
+<section class="section listen" id="conhecer">
+  <div class="section-inner">
+    <div class="eyebrow reveal">Conversa em tempo real</div>
+    <h2 class="reveal reveal-delay-1">Na era dos currículos perfeitos...<br><span class="dim">ouça talentos de verdade.</span></h2>
+    <p class="sub reveal reveal-delay-2">Cada entrevista é uma conversa por voz, ao vivo — não um formulário disfarçado de inteligência artificial.</p>
+    <div class="waveform reveal reveal-delay-3" id="waveform" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ======================================================
+     3. O PROBLEMA
+====================================================== -->
+<section class="section problem">
+  <div class="section-inner">
+    <div class="problem-grid">
+      <div>
+        <div class="eyebrow reveal">O contexto</div>
+        <h2 class="reveal reveal-delay-1">O currículo evoluiu.<br>A triagem, não.</h2>
+        <p class="problem-lede reveal reveal-delay-2">Com a IA generativa, currículos ficaram tecnicamente perfeitos — e cada vez menos representam quem a pessoa realmente é. O verdadeiro diferencial voltou a ser a conversa.</p>
+      </div>
+      <div class="stat-quotes reveal reveal-delay-2">
+        <div class="stat-quote">
+          <span class="src">Gartner</span>
+          <p>[Inserir dado/citação real fornecido pelo cliente]<span class="placeholder-flag">Placeholder — aguardando material do cliente</span></p>
+        </div>
+        <div class="stat-quote">
+          <span class="src">McKinsey</span>
+          <p>[Inserir dado/citação real fornecido pelo cliente]<span class="placeholder-flag">Placeholder — aguardando material do cliente</span></p>
+        </div>
+        <div class="stat-quote">
+          <span class="src">Harvard</span>
+          <p>[Inserir dado/citação real fornecido pelo cliente]<span class="placeholder-flag">Placeholder — aguardando material do cliente</span></p>
+        </div>
+        <div class="stat-quote">
+          <span class="src">Pesquisa Michael Page</span>
+          <p>[Inserir dado/citação real fornecido pelo cliente]<span class="placeholder-flag">Placeholder — aguardando material do cliente</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     4. O IMPASSE DA IA AVALIANDO IA
+====================================================== -->
+<section class="section impasse">
+  <div class="section-inner">
+    <div class="impasse-visual reveal" id="impasse-visual">
+      <div class="doc-lines" id="doc-lines"></div>
+    </div>
+    <div class="eyebrow reveal">O impasse</div>
+    <h2 class="reveal reveal-delay-1">Pare de triar currículos<br>e comece a triar pessoas.</h2>
+    <div class="impasse-tags reveal reveal-delay-2">
+      <span>Personalidade real ignorada</span>
+      <span>Candidatos qualificados eliminados por filtros</span>
+      <span>Contratações desalinhadas</span>
+      <span>Turnover</span>
+      <span>Excesso de dependência do currículo</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     5. O QUE A SOPHIA FAZ
+====================================================== -->
+<section class="section features">
+  <div class="section-inner">
+    <div class="features-head">
+      <div class="eyebrow reveal">Diferenciais</div>
+      <h2 class="reveal reveal-delay-1">O que a SophIA faz</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal"><div class="feature-icon">01</div><h3>Todos os candidatos são ouvidos</h3><p>Nenhuma triagem por palavra-chave elimina alguém antes de uma conversa real.</p></div>
+      <div class="feature-card reveal reveal-delay-1"><div class="feature-icon">02</div><h3>Análise comportamental no primeiro contato</h3><p>A SophIA identifica traços de comportamento já na primeira entrevista.</p></div>
+      <div class="feature-card reveal reveal-delay-2"><div class="feature-icon">03</div><h3>Aderência à empresa e cultura</h3><p>Cruzamento entre perfil do candidato e cultura organizacional da vaga.</p></div>
+      <div class="feature-card reveal"><div class="feature-icon">04</div><h3>Disponibilidade 24/7</h3><p>Entrevistas acontecem a qualquer hora, sem depender de agenda do RH.</p></div>
+      <div class="feature-card reveal reveal-delay-1"><div class="feature-icon">05</div><h3>RH focado nas decisões finais</h3><p>A equipe deixa de operar triagem e passa a decidir com dados prontos.</p></div>
+      <div class="feature-card reveal reveal-delay-2"><div class="feature-icon">06</div><h3>Cruzamento inteligente</h3><p>Entrevista e currículo são analisados juntos, não em etapas isoladas.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     6. SOPHIA VS OUTRAS IAS
+====================================================== -->
+<section class="section versus">
+  <div class="section-inner">
+    <div class="versus-head">
+      <div class="eyebrow reveal">A diferença</div>
+      <h2 class="reveal reveal-delay-1"><span class="weak">Outras IAs fazem perguntas.</span>A SophIA conduz conversas.</h2>
+    </div>
+    <div class="versus-grid">
+      <div class="versus-card other reveal">
+        <div class="versus-label">Chatbot de triagem comum</div>
+        <div class="chat-bubble">Qual sua pretensão salarial?</div>
+        <div class="chat-bubble">Você tem disponibilidade imediata?</div>
+        <div class="chat-bubble">Selecione uma opção abaixo.</div>
+      </div>
+      <div class="versus-card sophia reveal reveal-delay-1">
+        <div class="versus-label">SophIA — conversa real por voz</div>
+        <div class="chat-bubble">Me conta um pouco sobre um desafio recente que você resolveu no trabalho.</div>
+        <div class="versus-mini-wave" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     7. A RECRUTADORA VIRTUAL EM AÇÃO
+====================================================== -->
+<section class="section action">
+  <div class="section-inner">
+    <div class="action-head">
+      <div class="eyebrow reveal">Em ação</div>
+      <h2 class="reveal reveal-delay-1">A recrutadora virtual em ação</h2>
+    </div>
+    <div class="dashboard reveal reveal-delay-2">
+      <div class="dashboard-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;&nbsp;painel-sophia · vaga: analista-de-dados-pleno</div>
+      <div class="dashboard-body">
+        <div class="dashboard-col">
+          <h4>Ranking de candidatos</h4>
+          <div class="rank-row"><span class="rank-name"><span class="rank-num">01</span> Candidato A</span><span class="score-pill">Score 94</span></div>
+          <div class="rank-row"><span class="rank-name"><span class="rank-num">02</span> Candidato B</span><span class="score-pill">Score 89</span></div>
+          <div class="rank-row"><span class="rank-name"><span class="rank-num">03</span> Candidato C</span><span class="score-pill">Score 85</span></div>
+          <div class="rank-row"><span class="rank-name"><span class="rank-num">04</span> Candidato D</span><span class="score-pill">Score 81</span></div>
+        </div>
+        <div class="dashboard-col">
+          <h4>Cruzamento CV × Vaga</h4>
+          <div class="metric-bar-row"><div class="lbl"><span>Competência técnica</span><span>92%</span></div><div class="metric-bar-track"><div class="metric-bar-fill" data-width="92"></div></div></div>
+          <div class="metric-bar-row"><div class="lbl"><span>Aderência cultural</span><span>87%</span></div><div class="metric-bar-track"><div class="metric-bar-fill" data-width="87"></div></div></div>
+          <div class="metric-bar-row"><div class="lbl"><span>Comunicação</span><span>90%</span></div><div class="metric-bar-track"><div class="metric-bar-fill" data-width="90"></div></div></div>
+        </div>
+      </div>
+      <div class="dashboard-foot">
+        <span>100% dos candidatos entrevistados</span>
+        <span>Score e ranking estruturado</span>
+        <span>Avaliação de competências</span>
+      </div>
+    </div>
+    <p style="text-align:center; margin-top:20px; font-family:var(--font-mono); font-size:.7rem; color:var(--gray); opacity:.6;">Interface ilustrativa — dados de exemplo</p>
+  </div>
+</section>
+
+<!-- ======================================================
+     8. COMO FUNCIONA — 5 PASSOS
+====================================================== -->
+<section class="section steps">
+  <div class="section-inner">
+    <div class="steps-head">
+      <div class="eyebrow reveal">O processo</div>
+      <h2 class="reveal reveal-delay-1">Como funciona</h2>
+    </div>
+    <div class="steps-track">
+      <div class="step-card reveal"><span class="step-num">01</span><h3>Crie a vaga</h3><p>Defina o cargo e os requisitos em minutos.</p></div>
+      <div class="step-card reveal reveal-delay-1"><span class="step-num">02</span><h3>Divulgue</h3><p>A vaga chega aos candidatos pelos canais certos.</p></div>
+      <div class="step-card reveal reveal-delay-2"><span class="step-num">03</span><h3>Entrevista imediata</h3><p>A SophIA entrevista por voz, sem espera.</p></div>
+      <div class="step-card reveal reveal-delay-3"><span class="step-num">04</span><h3>Análise e Score</h3><p>Comportamento e currículo são cruzados automaticamente.</p></div>
+      <div class="step-card reveal"><span class="step-num">05</span><h3>O RH decide</h3><p>Sua equipe recebe um ranking pronto para decisão.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     9. CORE10®
+====================================================== -->
+<section class="section core10">
+  <div class="section-inner">
+    <div class="core10-wrap reveal">
+      <div>
+        <div class="core10-badge">CORE10®</div>
+        <h2>Análise comportamental de verdade</h2>
+        <p>Módulo proprietário de análise de comportamento, com curadoria de especialistas e IA generativa — cruzando referências consolidadas de mercado para gerar leitura comparativa entre candidatos.</p>
+      </div>
+      <div class="core10-layers">
+        <div class="core10-layer"><span>Análise comportamental — 1º contato</span><span>Ativo</span></div>
+        <div class="core10-layer"><span>Curadoria de especialistas</span><span>Ativo</span></div>
+        <div class="core10-layer"><span>IA generativa</span><span>Ativo</span></div>
+        <div class="core10-layer"><span>Análise comparativa</span><span>Ativo</span></div>
+        <div class="core10-layer"><span>Referências DISC · Big Five</span><span>Ativo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     10. PARCERIA SOPHIA + META / WHATSAPP
+====================================================== -->
+<section class="section whatsapp">
+  <div class="section-inner">
+    <div class="wa-grid">
+      <div>
+        <div class="eyebrow reveal">Parceria oficial</div>
+        <h2 class="reveal reveal-delay-1">SophIA integrada ao WhatsApp</h2>
+        <p class="reveal reveal-delay-2">Comunicação ativa com candidatos, direto no canal que eles já usam todos os dias.</p>
+        <ul class="wa-list reveal reveal-delay-3">
+          <li>Comunicação ativa</li>
+          <li>Disparos em massa</li>
+          <li>Contato individual</li>
+          <li>WhatsApp integrado à plataforma</li>
+        </ul>
+      </div>
+      <div class="wa-phone reveal reveal-delay-2">
+        <div class="wa-phone-head">
+          <div class="wa-avatar-dot">S</div>
+          <div><strong>SophIA</strong><span>online</span></div>
+        </div>
+        <div class="wa-msg">Oi! Vi que você se candidatou para Analista de Dados Pleno. Posso te entrevistar agora, por voz?</div>
+        <div class="wa-msg out">Pode sim!</div>
+        <div class="wa-msg">Perfeito. Vamos começar — me conta um pouco sobre sua trajetória.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     11. DEMONSTRAÇÃO DA EXPERIÊNCIA
+====================================================== -->
+<section class="section demo">
+  <div class="section-inner">
+    <div class="demo-head">
+      <div class="eyebrow reveal">Na prática</div>
+      <h2 class="reveal reveal-delay-1">Assim começa a conversa</h2>
+    </div>
+    <div class="demo-frame reveal reveal-delay-2">
+      <div class="wa-msg">Olá, Camila! Aqui é a SophIA, recrutadora virtual da StarMind. Vi seu interesse na vaga de Analista de Dados Pleno — posso te entrevistar por voz agora, sem compromisso?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     12. EFICIÊNCIA EM NÚMEROS
+====================================================== -->
+<section class="section numbers">
+  <div class="section-inner">
+    <div class="numbers-grid">
+      <div class="number-card reveal"><span class="num" data-target="75" data-suffix="%">0%</span><span class="lbl">Menos tempo no nível operacional do RH</span></div>
+      <div class="number-card reveal reveal-delay-1"><span class="num" data-target="5" data-suffix="x">0x</span><span class="lbl">Mais velocidade de contratação</span></div>
+      <div class="number-card reveal reveal-delay-2"><span class="num" data-decimal="9.2">0,0</span><span class="lbl">NPS dos candidatos</span></div>
+      <div class="number-card reveal reveal-delay-3"><span class="num" data-target="500" data-suffix="K+" data-prefix="+">0K+</span><span class="lbl">Entrevistas já conduzidas</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     13. EMPRESAS QUE JÁ UTILIZAM A SOPHIA
+====================================================== -->
+<section class="section clients">
+  <div class="section-inner">
+    <div class="clients-head">
+      <div class="eyebrow reveal">Confiança</div>
+    </div>
+    <div class="clients-grid">
+      <div class="client-logo reveal">Logo 01</div>
+      <div class="client-logo reveal">Logo 02</div>
+      <div class="client-logo reveal">Logo 03</div>
+      <div class="client-logo reveal">Logo 04</div>
+      <div class="client-logo reveal">Logo 05</div>
+    </div>
+    <p style="margin-top:20px; font-family:var(--font-mono); font-size:.68rem; color:var(--gray); opacity:.6;">Placeholder — inserir logos reais dos clientes</p>
+  </div>
+</section>
+
+<!-- ======================================================
+     14. DEPOIMENTOS
+====================================================== -->
+<section class="section testimonials">
+  <div class="section-inner">
+    <div class="testimonial-card reveal">
+      <blockquote>"[Inserir depoimento real fornecido pelo cliente aqui]"</blockquote>
+      <cite>Nome — Cargo, Empresa</cite>
+      <p class="testimonial-note">Placeholder — aguardando depoimentos reais do cliente</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     15. SOPHIA NA MÍDIA
+====================================================== -->
+<section class="section press">
+  <div class="section-inner">
+    <div class="press-head">
+      <div class="eyebrow reveal">Reconhecimento</div>
+      <h2 class="reveal reveal-delay-1">SophIA na mídia</h2>
+    </div>
+    <div class="press-grid">
+      <div class="press-card reveal"><span class="veh">Veículo</span><span class="ph">Espaço reservado para matéria, entrevista ou reportagem</span></div>
+      <div class="press-card reveal reveal-delay-1"><span class="veh">Veículo</span><span class="ph">Espaço reservado para matéria, entrevista ou reportagem</span></div>
+      <div class="press-card reveal reveal-delay-2"><span class="veh">Veículo</span><span class="ph">Espaço reservado para matéria, entrevista ou reportagem</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     16. O QUE ESTÁ POR TRÁS DA SOPHIA
+====================================================== -->
+<section class="section team">
+  <div class="section-inner">
+    <div class="team-head">
+      <div class="eyebrow reveal">A StarMind</div>
+      <h2 class="reveal reveal-delay-1">O que está por trás da SophIA</h2>
+      <p class="reveal reveal-delay-2">Uma equipe com histórico consolidado em tecnologia e recrutamento constrói a SophIA como uma plataforma proprietária.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal"><div class="team-photo">Foto</div><h3>Ivan H. Gonçalves</h3><span>Executivo, StarMind</span></div>
+      <div class="team-card reveal reveal-delay-1"><div class="team-photo">Foto</div><h3>Leandro Ockner</h3><span>Executivo, StarMind</span></div>
+      <div class="team-card reveal reveal-delay-2"><div class="team-photo">Foto</div><h3>Daniela Rivelle</h3><span>Executiva, StarMind</span></div>
+      <div class="team-card reveal reveal-delay-3"><div class="team-photo">Foto</div><h3>Augusto Salomon</h3><span>Executivo, StarMind</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     17. CTA FINAL
+====================================================== -->
+<section class="section cta-final" id="cta-final">
+  <div class="section-inner">
+    <h2 class="reveal"><span class="dim">Na era dos currículos perfeitos...</span>Conheça pessoas de verdade.</h2>
+    <p class="sub reveal reveal-delay-1">Junte-se aos RHs mais eficientes do Brasil e deixe a SophIA elevar a régua do seu recrutamento.</p>
+    <a href="#" class="btn btn-primary reveal reveal-delay-2">Agendar demonstração <span class="btn-arrow">→</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="logo">Soph<span>IA</span></div>
+    <p>StarMind © 2026 — Recrutadora Virtual Conversacional</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isMobile = window.innerWidth < 760;
+
+  /* ============ NAV scroll state ============ */
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, {passive:true});
+
+  /* ============ Scroll reveal ============ */
+  var revealEls = document.querySelectorAll('.reveal, .step-card');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.18, rootMargin:'0px 0px -40px 0px'});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  }
+
+  /* ============ Metric bars (section 7) ============ */
+  var bars = document.querySelectorAll('.metric-bar-fill');
+  if('IntersectionObserver' in window && bars.length){
+    var barIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.style.width = entry.target.dataset.width + '%';
+          barIo.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.4});
+    bars.forEach(function(b){ barIo.observe(b); });
+  }
+
+  /* ============ Count-up numbers (section 12) ============ */
+  var counters = document.querySelectorAll('.number-card .num');
+  function animateCount(el){
+    var target = parseFloat(el.dataset.target);
+    var decimal = el.dataset.decimal;
+    var suffix = el.dataset.suffix || '';
+    var prefix = el.dataset.prefix || '';
+    if(decimal){
+      var dTarget = parseFloat(decimal);
+      var dStart = 0, dDur = 1400, dT0 = null;
+      function stepD(ts){
+        if(!dT0) dT0 = ts;
+        var p = Math.min((ts - dT0) / dDur, 1);
+        var val = (dTarget * p).toFixed(1).replace('.', ',');
+        el.textContent = val;
+        if(p < 1) requestAnimationFrame(stepD);
+      }
+      requestAnimationFrame(stepD);
+      return;
+    }
+    var start = 0, dur = 1400, t0 = null;
+    function step(ts){
+      if(!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var val = Math.floor(target * p);
+      el.textContent = prefix + val + suffix;
+      if(p < 1) requestAnimationFrame(step);
+      else el.textContent = prefix + target + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window && counters.length){
+    var cIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          if(reduceMotion){
+            var el = entry.target;
+            el.textContent = (el.dataset.prefix||'') + (el.dataset.decimal ? el.dataset.decimal.replace('.',',') : el.dataset.target) + (el.dataset.suffix||'');
+          } else {
+            animateCount(entry.target);
+          }
+          cIo.unobserve(entry.target);
+        }
+      });
+    }, {threshold:.5});
+    counters.forEach(function(c){ cIo.observe(c); });
+  }
+
+  /* ============ Waveform bars (section 2 + versus mini wave) ============ */
+  function buildWave(container, count, minH, maxH){
+    for(var i=0; i<count; i++){
+      var bar = document.createElement('span');
+      var h = Math.floor(Math.random() * (maxH - minH) + minH);
+      bar.style.height = h + 'px';
+      bar.style.animationDelay = (Math.random() * 1.2).toFixed(2) + 's';
+      bar.style.animationDuration = (1.1 + Math.random() * 1).toFixed(2) + 's';
+      container.appendChild(bar);
+    }
+  }
+  var mainWave = document.getElementById('waveform');
+  if(mainWave) buildWave(mainWave, isMobile ? 28 : 48, 16, 100);
+  document.querySelectorAll('.versus-mini-wave').forEach(function(el){
+    buildWave(el, 18, 6, 30);
+  });
+
+  /* ============ Doc lines dissolve (section 4) ============ */
+  var docLines = document.getElementById('doc-lines');
+  if(docLines){
+    var widths = [90, 70, 82, 55, 76, 64];
+    widths.forEach(function(w, i){
+      var line = document.createElement('div');
+      line.className = 'doc-line';
+      line.style.width = w + '%';
+      docLines.appendChild(line);
+    });
+    var visualEl = document.getElementById('impasse-visual');
+    if('IntersectionObserver' in window){
+      var dIo = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting && !reduceMotion){
+            var lines = docLines.querySelectorAll('.doc-line');
+            lines.forEach(function(line, i){
+              setTimeout(function(){
+                line.style.transition = 'transform 1.1s cubic-bezier(.16,.84,.44,1), opacity 1.1s ease';
+                line.style.transform = 'translateX(' + (i % 2 === 0 ? '' : '-') + (40 + i * 14) + 'px) translateY(-6px)';
+                line.style.opacity = '0.15';
+              }, i * 90);
+            });
+            dIo.unobserve(visualEl);
+          }
+        });
+      }, {threshold:.5});
+      dIo.observe(visualEl);
+    }
+  }
+
+  /* ============ Particle system (hero canvas) ============ */
+  var canvas = document.getElementById('particle-canvas');
+  if(canvas && !reduceMotion){
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var mouse = {x:null, y:null};
+    var w, h, count;
+
+    function resize(){
+      w = canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      h = canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      canvas.style.width = canvas.offsetWidth + 'px';
+    }
+
+    function init(){
+      resize();
+      count = isMobile ? 34 : 78;
+      particles = [];
+      for(var i=0; i<count; i++){
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - .5) * .35 * window.devicePixelRatio,
+          vy: (Math.random() - .5) * .35 * window.devicePixelRatio,
+          r: (Math.random() * 1.6 + .8) * window.devicePixelRatio
+        });
+      }
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,w,h);
+      var linkDist = (isMobile ? 90 : 130) * window.devicePixelRatio;
+      for(var i=0; i<particles.length; i++){
+        var p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < 0 || p.x > w) p.vx *= -1;
+        if(p.y < 0 || p.y > h) p.vy *= -1;
+
+        if(mouse.x !== null && !isMobile){
+          var dx = p.x - mouse.x, dy = p.y - mouse.y;
+          var dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 160 * window.devicePixelRatio){
+            var force = (160 * window.devicePixelRatio - dist) / (160 * window.devicePixelRatio);
+            p.x += (dx/dist) * force * 1.1;
+            p.y += (dy/dist) * force * 1.1;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(196,181,253,.55)';
+        ctx.fill();
+
+        for(var j=i+1; j<particles.length; j++){
+          var p2 = particles[j];
+          var ddx = p.x - p2.x, ddy = p.y - p2.y;
+          var d = Math.sqrt(ddx*ddx + ddy*ddy);
+          if(d < linkDist){
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = 'rgba(124,58,237,' + ((1 - d/linkDist) * .35) + ')';
+            ctx.lineWidth = 1 * window.devicePixelRatio;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    init();
+    draw();
+    window.addEventListener('resize', init);
+    canvas.addEventListener('mousemove', function(e){
+      var rect = canvas.getBoundingClientRect();
+      mouse.x = (e.clientX - rect.left) * window.devicePixelRatio;
+      mouse.y = (e.clientY - rect.top) * window.devicePixelRatio;
+    });
+    canvas.addEventListener('mouseleave', function(){ mouse.x = null; mouse.y = null; });
+  }
+
+})();
+</script>
+
+</body>
+</html>
