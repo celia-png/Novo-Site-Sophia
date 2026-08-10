@@ -1,0 +1,707 @@
+/* ==================================================================
+   SOPHIA DESIGN SYSTEM
+   StarMind — Recrutadora Virtual Conversacional
+
+   Fonte única de verdade para tokens visuais e componentes
+   reutilizáveis do site. Consumido por index.html e demonstrado
+   em style-guide.html.
+
+   Índice:
+   1.  Tokens — Cores
+   2.  Tokens — Tipografia
+   3.  Tokens — Espaçamento
+   4.  Tokens — Bordas & Raio
+   5.  Tokens — Sombras & Glow
+   6.  Tokens — Movimento
+   7.  Reset & Base
+   8.  Layout & Grid
+   9.  Sistema Tipográfico (escala)
+   10. Microinterações — Scroll Reveal
+   11. Navbar
+   12. Menus
+   13. Botões
+   14. Badges & Indicadores
+   15. Cards
+   16. Números / Dados estatísticos
+   17. Depoimentos
+   18. CTA (seções de conversão)
+   19. Elementos de dados (dashboard, barras, painéis)
+   20. Componentes de mídia (imprensa, mockups de mensagem)
+   21. Componentes de avatar
+   22. Estados de foco e acessibilidade
+   ================================================================== */
+
+
+/* ==================================================================
+   1. TOKENS — CORES
+
+   Princípio: fundos escuros dominam a composição; roxo/lilás
+   funcionam como identidade e destaque pontual (~15-20% da
+   composição), nunca como preenchimento predominante.
+   ================================================================== */
+:root{
+  /* Fundos — profundidade em 3 camadas */
+  --bg-deep:        #0A0A0F;  /* camada base — preto quase absoluto */
+  --bg-navy:         #0D0D1A;  /* camada média — seções alternadas */
+  --bg-purple-deep:  #1A0F2E;  /* camada de destaque — gradientes/painéis */
+
+  /* Identidade SophIA — roxo/lilás */
+  --purple:          #7C3AED;  /* ação primária, CTAs, links ativos */
+  --purple-soft:      rgba(124,58,237,.35); /* glow de botões e cards */
+  --violet-deep:     #4C1D95;  /* acentos secundários, gradientes de dado */
+  --lilac:           #C4B5FD;  /* destaque tipográfico, ícones, eyebrows */
+
+  /* Neutros de equilíbrio */
+  --white:           #F5F5F7;  /* texto principal (nunca #FFF puro) */
+  --gray:            #A1A1AA;  /* texto secundário / legendas */
+  --border:          #2A2A35;  /* divisores, contornos sutis */
+
+  /* Cor de sistema (não-marca) */
+  --status-live:      #22c55e; /* indicador "ao vivo" — único verde do site */
+}
+
+/* ==================================================================
+   2. TOKENS — TIPOGRAFIA
+   Display: Space Grotesk (headlines, números)
+   Corpo:   Inter (texto de leitura)
+   Mono:    Space Mono (eyebrows, labels técnicos, dados)
+   ================================================================== */
+:root{
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+
+  /* Escala tipográfica — usada via clamp() nos componentes,
+     documentada aqui como referência de proporção */
+  --text-xs:   .68rem;   /* 11px  — flags, notas de placeholder */
+  --text-sm:   .78rem;   /* 12px  — labels, legendas, mono UI */
+  --text-base: 1rem;     /* 16px  — corpo de texto */
+  --text-md:   1.05rem;  /* 17px  — lede, corpo destacado */
+  --text-lg:   1.3rem;   /* 21px  — subtítulos */
+  --text-xl:   clamp(1.8rem, 3.4vw, 2.6rem);  /* títulos de seção */
+  --text-2xl:  clamp(2rem, 4.6vw, 3.4rem);    /* títulos de impacto */
+  --text-3xl:  clamp(2.4rem, 5vw, 4.1rem);    /* headline do hero */
+  --text-num:  clamp(2.4rem, 4.5vw, 3.4rem);  /* números grandes de dado */
+}
+
+/* ==================================================================
+   3. TOKENS — ESPAÇAMENTO
+   Escala base 4px. Seções usam --section-pad (fluido);
+   componentes internos usam a escala abaixo.
+   ================================================================== */
+:root{
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  --section-pad: clamp(80px, 12vw, 160px); /* respiro vertical entre seções */
+  --container-max: 1240px;
+  --container-pad: clamp(24px, 5vw, 64px);
+}
+
+/* ==================================================================
+   4. TOKENS — BORDAS & RAIO
+   ================================================================== */
+:root{
+  --radius-sm:  8px;    /* elementos pequenos: ícones, mini-cards */
+  --radius-md:  14px;   /* cards, paineis, foto de equipe */
+  --radius-lg:  20px;   /* dashboard, telefone de WhatsApp */
+  --radius-xl:  24px;   /* avatar-frame, blocos hero */
+  --radius-pill: 100px; /* botões, badges, tags */
+
+  --border-hairline: 1px solid var(--border);
+}
+
+/* ==================================================================
+   5. TOKENS — SOMBRAS & GLOW
+   Sombras são sempre projetadas para baixo e com blur generoso
+   (profundidade cinematográfica). Glow é reservado para elementos
+   roxo/lilás em estado de destaque ou hover.
+   ================================================================== */
+:root{
+  --shadow-sm: 0 8px 24px -12px rgba(0,0,0,.5);
+  --shadow-md: 0 24px 60px -24px rgba(0,0,0,.55);
+  --shadow-lg: 0 60px 120px -50px rgba(124,58,237,.4);
+
+  --glow-purple-sm: 0 0 24px var(--purple-soft);
+  --glow-purple-md: 0 0 40px var(--purple-soft);
+  --glow-purple-lg: 0 40px 100px -30px rgba(124,58,237,.35);
+  --glow-violet-card: 0 0 50px -20px var(--purple-soft);
+}
+
+/* ==================================================================
+   6. TOKENS — MOVIMENTO
+   ================================================================== */
+:root{
+  --ease: cubic-bezier(.16,.84,.44,1);
+  --duration-fast:  .3s;
+  --duration-base:  .4s;
+  --duration-slow:  1s;
+}
+
+/* ==================================================================
+   7. RESET & BASE
+   ================================================================== */
+*{margin:0; padding:0; box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg-deep);
+  color:var(--white);
+  font-family:var(--font-body);
+  font-weight:300;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* textura de grão sutil — reforça sensação de material premium
+   sobre o preto chapado */
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+}
+
+::selection{background:var(--purple); color:var(--white);}
+a{color:inherit; text-decoration:none;}
+img{max-width:100%; display:block;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+}
+
+/* ==================================================================
+   8. LAYOUT & GRID
+   Container único centralizado (max 1240px), grid de seção
+   consistente. Não há um grid de colunas fixo global: cada
+   seção define seu próprio grid de acordo com o conteúdo,
+   sempre em múltiplos da escala de espaçamento.
+   ================================================================== */
+.wrap{
+  max-width:var(--container-max);
+  margin:0 auto;
+  padding:0 var(--container-pad);
+}
+.section{
+  position:relative;
+  padding:var(--section-pad) 0;
+}
+.section-inner{
+  max-width:var(--container-max);
+  margin:0 auto;
+  padding:0 var(--container-pad);
+}
+
+/* ==================================================================
+   9. SISTEMA TIPOGRÁFICO
+   ================================================================== */
+h1,h2,h3{
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:-0.02em;
+  line-height:1.08;
+}
+
+/* eyebrow — label técnico que antecede todo título de seção;
+   estrutura a leitura sem decorar */
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:var(--text-sm);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--lilac);
+  display:inline-flex;
+  align-items:center;
+  gap:var(--space-2);
+}
+
+/* ==================================================================
+   10. MICROINTERAÇÕES — SCROLL REVEAL
+   Todo elemento com .reveal nasce oculto e sobe suavemente ao
+   entrar na viewport (via IntersectionObserver). Delays
+   escalonados criam leitura em cascata dentro de uma seção.
+   ================================================================== */
+.reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity var(--duration-slow) var(--ease), transform var(--duration-slow) var(--ease);
+}
+.reveal.is-visible{opacity:1; transform:translateY(0);}
+.reveal-delay-1.is-visible{transition-delay:.12s;}
+.reveal-delay-2.is-visible{transition-delay:.24s;}
+.reveal-delay-3.is-visible{transition-delay:.36s;}
+
+/* ==================================================================
+   11. NAVBAR
+   ================================================================== */
+.nav{
+  position:fixed; top:0; left:0; right:0;
+  z-index:100;
+  padding:22px 0;
+  backdrop-filter:blur(14px);
+  background:linear-gradient(to bottom, rgba(10,10,15,.7), transparent);
+  transition:background var(--duration-base) ease, padding var(--duration-base) ease;
+}
+.nav.scrolled{
+  background:rgba(10,10,15,.82);
+  border-bottom:var(--border-hairline);
+  padding:14px 0;
+}
+.nav-inner{
+  max-width:var(--container-max); margin:0 auto; padding:0 var(--container-pad);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.logo{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.15rem;
+  letter-spacing:-.01em;
+}
+.logo span{color:var(--lilac);}
+.nav-cta{
+  font-family:var(--font-mono);
+  font-size:var(--text-sm);
+  letter-spacing:.05em;
+  padding:10px 20px;
+  border:1px solid var(--purple);
+  border-radius:var(--radius-pill);
+  transition:background var(--duration-fast) ease, box-shadow var(--duration-fast) ease, transform var(--duration-fast) ease;
+}
+.nav-cta:hover{background:var(--purple); box-shadow:var(--glow-purple-sm); transform:translateY(-1px);}
+
+/* ==================================================================
+   12. MENUS
+   Componente de menu suspenso reutilizável — não usado na home
+   (nav atual tem CTA único, conforme estrutura do PROJECT_BRIEF),
+   mas disponível para páginas internas / expansão futura
+   (ex.: submenu "Produto", "Recursos").
+   ================================================================== */
+.menu{
+  position:relative;
+  display:inline-block;
+}
+.menu-trigger{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--font-body); font-size:.92rem; color:var(--gray);
+  cursor:pointer;
+  padding:8px 4px;
+  transition:color var(--duration-fast) ease;
+}
+.menu-trigger:hover, .menu.is-open .menu-trigger{color:var(--white);}
+.menu-caret{
+  width:8px; height:8px;
+  border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg) translateY(-2px);
+  transition:transform var(--duration-fast) ease;
+}
+.menu.is-open .menu-caret{transform:rotate(-135deg) translateY(2px);}
+.menu-panel{
+  position:absolute; top:calc(100% + 10px); left:0;
+  min-width:220px;
+  background:var(--bg-navy);
+  border:var(--border-hairline);
+  border-radius:var(--radius-md);
+  box-shadow:var(--shadow-md);
+  padding:var(--space-2);
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity var(--duration-fast) ease, transform var(--duration-fast) ease, visibility var(--duration-fast);
+}
+.menu.is-open .menu-panel{opacity:1; visibility:visible; transform:translateY(0);}
+.menu-item{
+  display:block; padding:10px 14px; border-radius:var(--radius-sm);
+  font-size:.88rem; color:var(--white);
+  transition:background var(--duration-fast) ease;
+}
+.menu-item:hover{background:rgba(124,58,237,.12); color:var(--lilac);}
+
+/* ==================================================================
+   13. BOTÕES
+   Dois papéis apenas: primário (conversão) e ghost (navegação
+   secundária). Sem terceira variação — reforça hierarquia clara
+   de decisão em cada seção.
+   ================================================================== */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-family:var(--font-body);
+  font-weight:500;
+  font-size:1rem;
+  padding:16px 30px;
+  border-radius:var(--radius-pill);
+  transition:box-shadow var(--duration-fast) ease, transform var(--duration-fast) ease, background var(--duration-fast) ease;
+  cursor:pointer;
+  border:none;
+}
+.btn-primary{
+  background:var(--purple);
+  color:var(--white);
+}
+.btn-primary:hover{box-shadow:var(--glow-purple-md); transform:translateY(-2px);}
+.btn-primary:active{transform:translateY(0); box-shadow:var(--glow-purple-sm);}
+.btn-ghost{
+  background:transparent;
+  color:var(--white);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{border-color:var(--lilac); color:var(--lilac);}
+.btn-arrow{transition:transform var(--duration-fast) ease;}
+.btn:hover .btn-arrow{transform:translateX(4px);}
+
+/* ==================================================================
+   14. BADGES & INDICADORES
+   Um único padrão visual (pill, borda fina, mono uppercase)
+   reaproveitado em todos os contextos: status ao vivo, score,
+   tags de contexto, badge de módulo (CORE10®).
+   ================================================================== */
+.badge{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--font-mono);
+  font-size:var(--text-sm);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:8px 16px;
+  border:var(--border-hairline);
+  border-radius:var(--radius-pill);
+  color:var(--gray);
+}
+.badge--accent{color:var(--lilac); border-color:var(--purple);}
+.badge--pill-tight{padding:6px 14px; font-size:.72rem;}
+
+/* indicador "ao vivo" — único ponto verde do sistema,
+   reservado exclusivamente para status em tempo real */
+.status-dot{
+  width:7px; height:7px; border-radius:50%;
+  background:var(--status-live);
+  box-shadow:0 0 0 0 rgba(34,197,94,.6);
+  animation:pulse-dot 2s infinite;
+}
+@keyframes pulse-dot{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,.55);}
+  70%{box-shadow:0 0 0 8px rgba(34,197,94,0);}
+  100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}
+}
+
+/* pill de score/métrica — usado no dashboard e em contextos
+   de dado quantitativo dentro de card */
+.score-pill{
+  font-family:var(--font-mono); font-size:.78rem;
+  padding:4px 10px; border-radius:var(--radius-pill);
+  background:rgba(124,58,237,.18); color:var(--lilac);
+}
+
+/* tag neutra — usada em listas de "sintomas do problema"
+   (seção Impasse) */
+.tag{
+  font-family:var(--font-mono);
+  font-size:var(--text-sm);
+  letter-spacing:.04em;
+  color:var(--gray);
+  padding:8px 14px;
+  border:var(--border-hairline);
+  border-radius:var(--radius-pill);
+}
+
+/* ==================================================================
+   15. CARDS
+   Um card-base neutro (.card) com três modificadores:
+   --feature (grid de diferenciais), --media (imprensa/logos),
+   --profile (equipe). Bordas finas + leve elevação no hover
+   substituem glassmorphism — a separação vem de luz, não de caixa.
+   ================================================================== */
+.card{
+  background:var(--bg-deep);
+  transition:background var(--duration-base) ease;
+}
+.card:hover{background:rgba(124,58,237,.06);}
+
+.card--feature{
+  padding:var(--space-8) var(--space-6);
+}
+.card-icon{
+  width:38px; height:38px;
+  border:1px solid var(--lilac);
+  border-radius:var(--radius-sm);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--lilac);
+  font-family:var(--font-mono);
+  margin-bottom:var(--space-5);
+  font-size:.9rem;
+}
+.card--feature h3{font-family:var(--font-display); font-size:1.05rem; font-weight:600; margin-bottom:var(--space-2);}
+.card--feature p{color:var(--gray); font-size:.92rem;}
+
+.card--media{
+  padding:var(--space-8) var(--space-6);
+  min-height:160px;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.card--media .veh{font-family:var(--font-mono); font-size:var(--text-sm); letter-spacing:.08em; text-transform:uppercase; color:var(--lilac);}
+.card--media .ph{color:var(--gray); font-size:.85rem; margin-top:var(--space-3);}
+
+.card--profile{
+  text-align:left; background:transparent;
+}
+.card--profile:hover{background:transparent;}
+.card--profile-photo{
+  aspect-ratio:1/1; border-radius:var(--radius-md);
+  background:linear-gradient(160deg, var(--bg-purple-deep), var(--bg-deep));
+  border:var(--border-hairline);
+  margin-bottom:var(--space-4);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gray); font-family:var(--font-mono); font-size:.68rem; text-align:center; padding:var(--space-3);
+}
+.card--profile h3{font-family:var(--font-display); font-size:.98rem; font-weight:600; margin-bottom:var(--space-1);}
+.card--profile span{font-size:.8rem; color:var(--gray);}
+
+/* card de comparação (versus) — variação com estado "ativo"
+   (identidade SophIA) vs. estado "neutro" (concorrência genérica) */
+.card--compare{
+  border:var(--border-hairline);
+  border-radius:var(--radius-md);
+  padding:var(--space-10) var(--space-8);
+  min-height:280px;
+  display:flex; flex-direction:column;
+}
+.card--compare.is-neutral{background:rgba(255,255,255,.015); opacity:.75;}
+.card--compare.is-active{
+  background:linear-gradient(160deg, rgba(124,58,237,.12), transparent);
+  border-color:var(--purple);
+  box-shadow:var(--glow-violet-card);
+}
+
+/* grade de cards — utilitário: transforma qualquer lista de
+   .card em um grid com bordas compartilhadas de 1px (efeito
+   "tabela de vidro escuro") */
+.card-grid{
+  display:grid;
+  gap:1px;
+  background:var(--border);
+  border:var(--border-hairline);
+}
+.card-grid > .card{background:var(--bg-deep);}
+.card-grid--3{grid-template-columns:repeat(3, 1fr);}
+.card-grid--5{grid-template-columns:repeat(5, 1fr);}
+@media (max-width:900px){
+  .card-grid--3{grid-template-columns:1fr 1fr;}
+  .card-grid--5{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:600px){
+  .card-grid--3{grid-template-columns:1fr;}
+  .card-grid--5{grid-template-columns:repeat(2,1fr);}
+}
+
+/* ==================================================================
+   16. NÚMEROS / DADOS ESTATÍSTICOS
+   Números tratados como elemento gráfico: peso extra-bold,
+   tabular-nums, cor de destaque — protagonistas da seção,
+   não apenas texto.
+   ================================================================== */
+.stat{
+  background:var(--bg-navy);
+  padding:var(--space-10) var(--space-6);
+  text-align:center;
+}
+.stat-number{
+  font-family:var(--font-display); font-weight:700;
+  font-size:var(--text-num);
+  color:var(--lilac);
+  display:block; margin-bottom:var(--space-3);
+  font-variant-numeric:tabular-nums;
+}
+.stat-label{font-size:.85rem; color:var(--gray);}
+
+/* ==================================================================
+   17. DEPOIMENTOS
+   Formato editorial — uma citação de cada vez, tipografia
+   grande, sem cartão/moldura. A citação é o design.
+   ================================================================== */
+.testimonial{
+  max-width:760px; margin:0 auto; text-align:center;
+}
+.testimonial blockquote{
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.3rem,2.6vw,1.9rem);
+  line-height:1.35;
+  margin-bottom:var(--space-8);
+}
+.testimonial cite{font-style:normal; font-family:var(--font-mono); font-size:.78rem; color:var(--gray);}
+.testimonial-note{margin-top:var(--space-10); font-family:var(--font-mono); font-size:var(--text-xs); color:var(--gray); opacity:.6;}
+
+/* ==================================================================
+   18. CTA (seções de conversão)
+   Reaproveita .btn — aqui apenas o tratamento de fundo/headline
+   das seções que existem para converter (Hero e CTA final).
+   ================================================================== */
+.cta-section{
+  position:relative; text-align:center; overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 30%, rgba(124,58,237,.28), transparent 65%),
+    var(--bg-deep);
+}
+.cta-section h2{font-size:var(--text-2xl); max-width:760px; margin:0 auto var(--space-5);}
+.cta-section h2 .dim{color:var(--gray); font-weight:400; display:block; font-size:.62em; margin-bottom:var(--space-3);}
+.cta-section p.sub{color:var(--gray); max-width:500px; margin:0 auto var(--space-10);}
+
+/* ==================================================================
+   19. ELEMENTOS DE DADOS
+   Painel de dashboard reutilizável — usado na seção "Recrutadora
+   em ação" para simular ranking/score em tempo real.
+   ================================================================== */
+.data-panel{
+  border:var(--border-hairline);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  background:linear-gradient(160deg, var(--bg-purple-deep) 0%, var(--bg-navy) 100%);
+  box-shadow:var(--shadow-lg);
+}
+.data-panel-bar{
+  display:flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-4) var(--space-6);
+  border-bottom:var(--border-hairline);
+  font-family:var(--font-mono); font-size:.7rem; color:var(--gray);
+}
+.data-panel-bar .dot{width:8px;height:8px;border-radius:50%; background:var(--border);}
+.data-panel-body{
+  display:grid; grid-template-columns:1.4fr 1fr; gap:1px; background:var(--border);
+}
+.data-panel-col{background:var(--bg-navy); padding:var(--space-8);}
+.data-panel-col h4{font-family:var(--font-mono); font-size:var(--text-sm); text-transform:uppercase; letter-spacing:.08em; color:var(--gray); margin-bottom:var(--space-5);}
+.data-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--space-4) 0; border-bottom:var(--border-hairline);
+  font-size:.92rem;
+}
+.data-row:last-child{border-bottom:none;}
+.data-row-name{display:flex; align-items:center; gap:var(--space-3);}
+.data-row-num{font-family:var(--font-mono); color:var(--gray); font-size:.8rem; width:20px;}
+
+.metric-bar{margin-bottom:var(--space-4);}
+.metric-bar .lbl{display:flex; justify-content:space-between; font-size:.82rem; margin-bottom:var(--space-2); color:var(--gray);}
+.metric-bar-track{height:6px; border-radius:var(--radius-sm); background:var(--border); overflow:hidden;}
+.metric-bar-fill{height:100%; border-radius:var(--radius-sm); background:linear-gradient(90deg, var(--violet-deep), var(--lilac)); width:0%; transition:width 1.4s var(--ease);}
+
+.data-panel-foot{
+  display:flex; flex-wrap:wrap; gap:var(--space-8);
+  padding:var(--space-6); border-top:var(--border-hairline);
+  font-family:var(--font-mono); font-size:var(--text-sm); color:var(--gray);
+}
+@media (max-width:800px){.data-panel-body{grid-template-columns:1fr;}}
+
+/* ==================================================================
+   20. COMPONENTES DE MÍDIA
+   Dois padrões: grade de imprensa (.card--media, seção 15) e
+   mockup de conversa (WhatsApp / demonstração), que também serve
+   de referência para qualquer print de mensagem futuro.
+   ================================================================== */
+.chat-mock{
+  background:linear-gradient(160deg, var(--bg-purple-deep), var(--bg-navy));
+  border:var(--border-hairline); border-radius:var(--radius-lg);
+  padding:var(--space-5); max-width:340px; margin:0 auto;
+}
+.chat-mock-head{display:flex; align-items:center; gap:var(--space-3); padding-bottom:var(--space-4); border-bottom:var(--border-hairline); margin-bottom:var(--space-4);}
+.chat-mock-head strong{font-size:.85rem;}
+.chat-mock-head .status{display:block; font-size:.7rem; color:var(--status-live);}
+.chat-bubble{
+  padding:12px 16px; border-radius:12px 12px 12px 2px; font-size:.88rem; max-width:88%;
+  margin-bottom:var(--space-3);
+  background:rgba(255,255,255,.05); color:var(--white);
+}
+.chat-bubble.is-outgoing{background:rgba(124,58,237,.25); margin-left:auto; border-radius:12px 12px 2px 12px;}
+.chat-bubble.is-muted{color:var(--gray);}
+
+/* moldura de demonstração isolada (seção 11) — mesma linguagem
+   do chat-mock, formato "print" avulso */
+.frame-quote{
+  max-width:460px; margin:0 auto;
+  border:var(--border-hairline); border-radius:var(--radius-lg);
+  padding:var(--space-6); text-align:left;
+  background:rgba(255,255,255,.02);
+}
+
+/* ==================================================================
+   21. COMPONENTES DE AVATAR
+   O avatar da SophIA é ativo proprietário da marca — o
+   componente define apenas a moldura/luz ao redor dele,
+   nunca o desenho do avatar em si.
+   ================================================================== */
+.avatar-frame{
+  position:relative;
+  aspect-ratio:3/4;
+  border-radius:var(--radius-xl);
+  background:linear-gradient(160deg, var(--bg-purple-deep), var(--bg-navy));
+  border:var(--border-hairline);
+  overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--glow-purple-lg);
+}
+.avatar-frame::after{
+  content:"";
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 20%, rgba(124,58,237,.35), transparent 65%);
+  pointer-events:none;
+}
+.avatar-placeholder{
+  position:relative; z-index:1;
+  text-align:center;
+  padding:var(--space-8);
+  color:var(--gray);
+}
+.avatar-glyph{
+  width:64px; height:64px;
+  margin:0 auto var(--space-4);
+  border:1.5px dashed var(--lilac);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  opacity:.7;
+}
+.avatar-placeholder strong{display:block; color:var(--white); font-family:var(--font-mono); font-size:.8rem; letter-spacing:.05em; margin-bottom:var(--space-2);}
+.avatar-placeholder span{font-size:.78rem; line-height:1.5; display:block;}
+
+/* avatar circular pequeno — usado no cabeçalho do chat-mock */
+.avatar-dot{
+  width:32px; height:32px; border-radius:50%; background:var(--purple);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:.8rem;
+}
+
+/* ondas sonoras — representação visual recorrente da "conversa
+   por voz"; reutilizada no hero conceitual, na seção 2 e como
+   indicador secundário nos cards de comparação */
+.waveform{
+  display:flex; align-items:center; justify-content:center;
+  gap:4px;
+}
+.waveform span{
+  display:block;
+  width:5px;
+  border-radius:4px;
+  background:linear-gradient(180deg, var(--lilac), var(--purple));
+  animation:wave 1.6s ease-in-out infinite;
+  opacity:.85;
+}
+@keyframes wave{
+  0%,100%{transform:scaleY(.3);}
+  50%{transform:scaleY(1);}
+}
+
+/* ==================================================================
+   22. ESTADOS DE FOCO & ACESSIBILIDADE
+   ================================================================== */
+a:focus-visible, button:focus-visible, .menu-trigger:focus-visible{
+  outline:2px solid var(--lilac);
+  outline-offset:4px;
+  border-radius:4px;
+}
